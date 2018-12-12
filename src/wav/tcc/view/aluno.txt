@@ -1,0 +1,16 @@
+// ~->[CASE-1]->~
+Aprovado Cursinho IBL 
+Sim Nao Sim 
+Nao Sim Nao 
+Sim Sim Sim 
+Nao Nao Nao 
+Sim Sim Sim 
+Sim Sim Sim 
+Nao Sim Nao 
+Nao Sim Nao 
+Sim Sim Nao 
+Sim Sim Sim 
+Nao Sim Nao 
+Nao Sim Nao 
+Nao Nao Nao
+Nao Nao Sim

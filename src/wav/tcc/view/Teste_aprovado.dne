@@ -1,0 +1,107 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 6.04 on Aug 03, 2018 at 12:49:06 UTC.
+
+bnet Teste_aprovado {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1533300527;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (26, 26, 1139, 473);
+	resolution = 72;
+	drawingbounds = (1345, 720);
+	showpagebreaks = FALSE;
+	usegrid = FALSE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node Aprovado {
+	discrete = TRUE;
+	states = (Sim, Nao);
+	kind = NATURE;
+	chance = CHANCE;
+	parents = ();
+	probs = 
+		// Sim          Nao          
+		  (0.4375,      0.5625);
+	numcases = 16;
+	whenchanged = 1533300523;
+	belief = (0.7446808, 0.2553191);
+	visual V1 {
+		center = (396, 90);
+		height = 1;
+		};
+	};
+
+node Cursinho {
+	discrete = TRUE;
+	states = (Sim, Nao);
+	kind = NATURE;
+	chance = CHANCE;
+	parents = (Aprovado);
+	probs = 
+		// Sim          Nao           // Aprovado 
+		  (0.75,        0.25,         // Sim      
+		   0.6,         0.4);         // Nao      ;
+	numcases = 
+		                 // Aprovado 
+		  (8,            // Sim      
+		   10);          // Nao      ;
+	whenchanged = 1533300523;
+	belief = (0.7117021, 0.2882979);
+	visual V1 {
+		center = (180, 174);
+		height = 2;
+		link 1 {
+			path = ((330, 117), (248, 148));
+			};
+		};
+	};
+
+node IBL {
+	discrete = TRUE;
+	states = (Sim, Nao);
+	kind = NATURE;
+	chance = CHANCE;
+	parents = (Aprovado);
+	probs = 
+		// Sim          Nao           // Aprovado 
+		  (0.75,        0.25,         // Sim      
+		   0.2,         0.8);         // Nao      ;
+	numcases = 
+		                 // Aprovado 
+		  (8,            // Sim      
+		   10);          // Nao      ;
+	whenchanged = 1533300527;
+	evidence = Sim;
+	belief = (1, 0);
+	visual V1 {
+		center = (582, 182);
+		height = 3;
+		link 1 {
+			path = ((448, 117), (529, 156));
+			};
+		};
+	};
+ElimOrder = (Cursinho, Aprovado, IBL);
+};
