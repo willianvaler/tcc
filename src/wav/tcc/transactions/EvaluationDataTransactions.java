@@ -81,45 +81,48 @@ public class EvaluationDataTransactions
                 avaliacaoAluno.add( result.getInt( 17 ) );
             }
             
-            double probMediaDobrada = NetsUtil.calculateDoubleAverage( minutosPontoChave );
-            double hipMediaDobrada = NetsUtil.calculateDoubleAverage( minutosHipotese );
-            
-            int [] qDetalhePontoChave = NetsUtil.getQuartiles( detalhePontoChave );
-            int [] qDetalheHipotese = NetsUtil.getQuartiles( detalheHipotese );
-            int [] qDetalheCodigo = NetsUtil.getQuartiles( detalheCodigo );
-            
-            for( int i = 0; i < nome.size(); i++ )
+            if (!nome.isEmpty()) 
             {
-                ConfidenceClassStudent student = new ConfidenceClassStudent();
-                
-                double proportion = NetsUtil.calculateProportion( minutosPontoChave.get(i), minutosHipotese.get(i), minutosCodigo.get(i) );
-                
-                int retomada = retomadas.get( i );
-                
-                /*GENERAL DATA*/
-                student.setNome( nome.get( i ) );
-                student.setSobrenome( sobrenome.get( i ) );
-                student.setNivelCompreensao( NetsUtil.getNivel( nivelCompreensao.get( i ) ) );
-                student.setClassePropPH( ( proportion <= 0.20 || proportion >= 0.80 ? "DESPROPORCIONAL" : "PROPORCIONAL" ) );
-                student.setDica1( ( dica1.get( i ) > 0 ? "S" : "N" ) );
-                student.setDica2( ( dica2.get( i ) > 0 ? "S" : "N" ) );
-                student.setPseudo( ( pseudo.get( i ) > 0 ? "S" : "N" ) );
-                
-                /*CONFIANÇA*/
-                student.setClasseTPprobCF( ( minutosPontoChave.get( i ) >= probMediaDobrada ? "ACIMA" : "NORMAL" ) );
-                student.setClasseTPhipCF( ( minutosHipotese.get( i ) >= hipMediaDobrada ? "ACIMA" : "NORMAL" ) );
-                student.setRetomadas( ( retomada == 0 ? "NENHUMA" : ( retomada <= 2 ? "POUCAS" : "MUITAS" ) ) );
-                student.setAvaliacaoAluno( NetsUtil.getAvaliacaoEstudante( avaliacaoAluno.get( i ) ) );
-                
-                /*ESFORÇO*/
-                student.setClasseTPprobEF( NetsUtil.getQuartileEvaluation( qDetalhePontoChave[0], qDetalhePontoChave[1], minutosPontoChave.get( i ) ) );
-                student.setClasseTPhipEF(  NetsUtil.getQuartileEvaluation( qDetalheHipotese[0],   qDetalheHipotese[1],   minutosHipotese.get( i ) ) );
-                student.setClasseTPcodEF(  NetsUtil.getQuartileEvaluation( qDetalheCodigo[0],     qDetalheCodigo[1],     minutosCodigo.get( i ) ) );
-                student.setNivelDetalheHip( NetsUtil.getNivel( detalheHipotese.get( i ) ) );
-                student.setNivelDetalheProb( NetsUtil.getNivel( detalhePontoChave.get( i ) ) );
-                student.setNumeroExecucoes( ( numeroExecucoes.get( i ) >= 1 ? "S" : "N" ) );
-                
-                students.add( student );
+                double probMediaDobrada = NetsUtil.calculateDoubleAverage( minutosPontoChave );
+                double hipMediaDobrada = NetsUtil.calculateDoubleAverage( minutosHipotese );
+
+                int [] qDetalhePontoChave = NetsUtil.getQuartiles( detalhePontoChave );
+                int [] qDetalheHipotese = NetsUtil.getQuartiles( detalheHipotese );
+                int [] qDetalheCodigo = NetsUtil.getQuartiles( detalheCodigo );
+
+                for( int i = 0; i < nome.size(); i++ )
+                {
+                    ConfidenceClassStudent student = new ConfidenceClassStudent();
+
+                    double proportion = NetsUtil.calculateProportion( minutosPontoChave.get(i), minutosHipotese.get(i), minutosCodigo.get(i) );
+
+                    int retomada = retomadas.get( i );
+
+                    /*GENERAL DATA*/
+                    student.setNome( nome.get( i ) );
+                    student.setSobrenome( sobrenome.get( i ) );
+                    student.setNivelCompreensao( NetsUtil.getNivel( nivelCompreensao.get( i ) ) );
+                    student.setClassePropPH( ( proportion <= 0.20 || proportion >= 0.80 ? "DESPROPORCIONAL" : "PROPORCIONAL" ) );
+                    student.setDica1( ( dica1.get( i ) > 0 ? "S" : "N" ) );
+                    student.setDica2( ( dica2.get( i ) > 0 ? "S" : "N" ) );
+                    student.setPseudo( ( pseudo.get( i ) > 0 ? "S" : "N" ) );
+
+                    /*CONFIANÇA*/
+                    student.setClasseTPprobCF( ( minutosPontoChave.get( i ) >= probMediaDobrada ? "ACIMA" : "NORMAL" ) );
+                    student.setClasseTPhipCF( ( minutosHipotese.get( i ) >= hipMediaDobrada ? "ACIMA" : "NORMAL" ) );
+                    student.setRetomadas( ( retomada == 0 ? "NENHUMA" : ( retomada <= 2 ? "POUCAS" : "MUITAS" ) ) );
+                    student.setAvaliacaoAluno( NetsUtil.getAvaliacaoEstudante( avaliacaoAluno.get( i ) ) );
+
+                    /*ESFORÇO*/
+                    student.setClasseTPprobEF( NetsUtil.getQuartileEvaluation( qDetalhePontoChave[0], qDetalhePontoChave[1], minutosPontoChave.get( i ) ) );
+                    student.setClasseTPhipEF(  NetsUtil.getQuartileEvaluation( qDetalheHipotese[0],   qDetalheHipotese[1],   minutosHipotese.get( i ) ) );
+                    student.setClasseTPcodEF(  NetsUtil.getQuartileEvaluation( qDetalheCodigo[0],     qDetalheCodigo[1],     minutosCodigo.get( i ) ) );
+                    student.setNivelDetalheHip( NetsUtil.getNivel( detalheHipotese.get( i ) ) );
+                    student.setNivelDetalheProb( NetsUtil.getNivel( detalhePontoChave.get( i ) ) );
+                    student.setNumeroExecucoes( ( numeroExecucoes.get( i ) >= 1 ? "S" : "N" ) );
+
+                    students.add( student );
+                }
             }
         } 
         

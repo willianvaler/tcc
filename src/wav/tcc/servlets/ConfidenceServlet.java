@@ -79,16 +79,26 @@ public class ConfidenceServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadClassData( 58 );
+        String id = request.getParameter( "ExerciseId" );
         
-        List<float[]> confidenceBeliefs = new ClassConfidenceBayesianNet().loadConfidenceBayesNet( students );
-        List<float[]> effortBeliefs     = new ClassEffortBayesianNet().loadEffortBayesNet( students );
+        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadClassData( Integer.valueOf( id ) );
         
         List<float[]> data = new ArrayList();
         
-        for( int i = 0; i < students.size(); i++ )
+        if (students != null && !students.isEmpty() ) 
         {
-            data.add( new float[]{ confidenceBeliefs.get( i )[0], effortBeliefs.get( i )[0] } );
+            List<float[]> confidenceBeliefs = new ClassConfidenceBayesianNet().loadConfidenceBayesNet( students );
+            List<float[]> effortBeliefs     = new ClassEffortBayesianNet().loadEffortBayesNet( students );
+
+            for( int i = 0; i < students.size(); i++ )
+            {
+                data.add( new float[]{ confidenceBeliefs.get( i )[0], effortBeliefs.get( i )[0] } );
+            }
+        }
+        
+        else
+        {
+            data.add( new float[]{-1, -1});
         }
         
         Gson gson = new Gson();

@@ -89,8 +89,19 @@ public class ClassConfidenceBayesianNet
                     nivelCompreensao = "Nível compreenção: BAIXO: " + classe_nivel_comprensao.getBelief( "BAIXO" ) + "; MEDIO:" 
                                                     + classe_nivel_comprensao.getBelief( "MEDIO" ) + " ; ALTO: " + classe_nivel_comprensao.getBelief( "ALTO" );
                     retomadas = "Retomadas: NENHUMA: " + classe_retomadas.getBelief( "NENHUMA" ) + "; POUCAS: " + classe_retomadas.getBelief( "POUCAS" ) + "; MUITAS:" + classe_retomadas.getBelief( "MUITAS" );
-                    avaliacaoAluno = "Avaliação aluno: DIFÍCIL: " + avaliacao_aluno.getBelief( "DIFICIL" ) + "; MÉDIO: " + avaliacao_aluno.getBelief( "MEDIO" ) + "; FÁCIL: " + avaliacao_aluno.getBelief( "FACIL" );
                     
+                    avaliacaoAluno = "Avaliação aluno: DIFÍCIL: " + avaliacao_aluno.getBelief( "DIFICIL" ) + "; MÉDIO: " + avaliacao_aluno.getBelief( "MEDIO" ) + "; FÁCIL: " + avaliacao_aluno.getBelief( "FACIL" );
+//                    System.out.println( "NOme:" + student.getNome() + " " + student.getSobrenome()
+//                                        + "-  Classe_tp_prob_cf: " + student.getClasseTPprobCF() + 
+//                                       " - Classe_tp_hip_cf:" + student.getClasseTPhipCF() +
+//                                        " - Classe_prop_ph: " + student.getClassePropPH() + 
+//                                        " - dica1: " + student.getDica1() +
+//                                        " - dica2: " + student.getDica2() +
+//                                        " - pseudo: " + student.getPseudo() +
+//                                        " - nivel compreensao: " + student.getNivelCompreensao() +
+//                                        " - retomadas: " + student.getRetomadas() +
+//                                        " - avaliacao aluno: " + student.getAvaliacaoAluno() +
+//                                        " - nivel confiança: " + nivel_confianca.getBeliefs()[0] );
                     env.finalize();
                 }
                 

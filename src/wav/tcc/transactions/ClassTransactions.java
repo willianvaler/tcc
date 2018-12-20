@@ -26,10 +26,6 @@ public class ClassTransactions
         {
             Statement st = Database.getInstance().getConnection().createStatement();
 
-            
-            /*
-            select ec.* from turma t, turma_has_usuario th, usuario u, exercicio_aluno ea, exercicio_correcao ec where t.id = 5 and t.id = th.turma_id 
-and u.id = th.usuario_id and ea.usuario_id_aluno = u.id and ec.exercicio_gerado_id = ea.id ;*/
             ResultSet result = st.executeQuery( "select id, semestre from turma" );
             
             while( result.next() )
@@ -49,5 +45,35 @@ and u.id = th.usuario_id and ea.usuario_id_aluno = u.id and ec.exercicio_gerado_
         }
         
         return turmas;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    public Turma getTurma( int id )
+    {
+        Turma t = null;
+        
+        try
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+
+            ResultSet result = st.executeQuery( "select id, semestre from turma where id = " + id );
+            
+            result.next();
+            t = new Turma();
+
+            t.setId( result.getInt( "id" ) );
+            t.setName( result.getString( "semestre" ) );
+        }
+        
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        
+        return t;
     }
 }

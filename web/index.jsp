@@ -4,6 +4,9 @@
     Author     : willi
 --%>
 
+<%@page import="wav.tcc.transactions.ExerciseTransactions"%>
+<%@page import="wav.tcc.entities.Exercicio"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -78,11 +81,17 @@
                 <div class="col-md-10" style="position: relative;z-index: 1;">
                     <div class="content-box-large" style="position: relative;">
                         <div class="panel-body" style="position: relative;z-index: 1;">
-                            <select name="exercises" style="width: 90%">
+                            <select id="exercises" style="width: 90%">
                                 <%
+                                    List<Exercicio> exercicios = new ExerciseTransactions().getExercises();
+                                    
+                                    for( Exercicio e : exercicios )
+                                    {
                                 %>
-                                    <option>Exercício 58</option>
-                                <%%>
+                                    <option value="<%=e.getId()%>"> <%=e.getId() + " - " + e.getName() + " - " + e.getTurma().getName()%> </option>
+                                <%
+                                    }
+                                %>
                             </select>
                             <button id="teste" style="width: 60px">OK</button>
                             <div id="details" class="panel-body">
@@ -136,10 +145,13 @@
                             levelColors: [ "#026607"]
                         });
                     }
-
+                    
                     $(document).on( "click", "#teste", function()
                     {   
-                        $.get( "ConfidenceServlet", function( data )
+                        var e = document.getElementById( "exercises" );
+                        var id = e.options[e.selectedIndex].value;
+                        
+                        $.get( "ConfidenceServlet", {ExerciseId:id}, function( data )
                         {
 
                             $( '#container' ).empty();
