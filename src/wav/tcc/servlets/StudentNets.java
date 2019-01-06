@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import wav.tcc.entities.Belief;
+import wav.tcc.entities.ConfidenceClassStudent;
 import wav.tcc.net.StudentConfidenceBayesianNet;
 import wav.tcc.net.StudentEffortBayesianNet;
+import wav.tcc.transactions.EvaluationDataTransactions;
 
 /**
  *
@@ -58,7 +60,6 @@ public class StudentNets extends HttpServlet
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -71,15 +72,41 @@ public class StudentNets extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        List<float[]> confidenceBeliefs = new StudentConfidenceBayesianNet().loadConfidenceBayesNet();
-        List<float[]> effortBeliefs     = new StudentEffortBayesianNet().loadEffortBayesNet();
-
-        List<float[]> data = new ArrayList();
+        String id = request.getParameter( "ClassId" );
         
-        for( int i = 0; i < confidenceBeliefs.size(); i++ )
+        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadReadyStudentData( Integer.valueOf( id ) );
+        
+        List<Object> data = new ArrayList();
+        
+        if ( students != null && !students.isEmpty() ) 
         {
-            data.add( new float[]{ confidenceBeliefs.get( i )[0], effortBeliefs.get( i )[0] } );
+            List<Object[]> confidenceBeliefs = new StudentConfidenceBayesianNet().loadConfidenceBayesNet( students );
+            List<Object[]> effortBeliefs     = new StudentEffortBayesianNet().loadEffortBayesNet( students );
+
+            for( int i = 0; i < confidenceBeliefs.size(); i++ )
+            {
+                float[] confidence = (float[]) confidenceBeliefs.get( i )[0];
+                float[] effort     = (float[]) effortBeliefs.get( i )[0];
+                String name1       = (String)confidenceBeliefs.get(i)[1];
+                String name2       = (String)effortBeliefs.get(i)[1];
+                
+                if (name1.equals(name2)) 
+                {
+                    data.add( new Object[]{ confidence[0], effort[0], name1 } );
+                }
+                
+                else
+                {
+                    System.out.println("problema no order");
+                }
+            }
         }
+        
+        else
+        {
+            data.add( new float[]{-1, -1});
+        }
+        
         
         Gson gson = new Gson();
         String json = gson.toJson( data );
@@ -113,7 +140,7 @@ public class StudentNets extends HttpServlet
     public String getServletInfo()
     {
         return "Short description";
-    }// </editor-fold>
+    }
 
     
 }

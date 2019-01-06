@@ -11,8 +11,8 @@ import norsys.netica.Environ;
 import norsys.netica.Net;
 import norsys.netica.Node;
 import norsys.netica.Streamer;
-import wav.tcc.entities.Belief;
 import wav.tcc.entities.ConfidenceClassStudent;
+import wav.tcc.transactions.EvaluationDataTransactions;
 import wav.tcc.view.Tcc;
 
 /**
@@ -28,13 +28,13 @@ public class ClassConfidenceBayesianNet
      * @param students
      * @return 
      */
-    public List<float[]> loadConfidenceBayesNet( List<ConfidenceClassStudent> students ) 
+    public List<Object[]> loadConfidenceBayesNet( List<ConfidenceClassStudent> students ) 
     {
         Tcc.getInstance();
         
         try
         {
-            List<float[]> beliefs = new ArrayList();
+            List<Object[]> beliefs = new ArrayList();
             
             String tpProb = "";
             String tpHip = "";
@@ -78,7 +78,13 @@ public class ClassConfidenceBayesianNet
                     classe_nivel_comprensao.finding().enterState( student.getNivelCompreensao() );
                     avaliacao_aluno.finding().enterState( student.getAvaliacaoAluno() );
                     
-                    beliefs.add( nivel_confianca.getBeliefs() );
+                    Object[] data = { nivel_confianca.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    
+                    beliefs.add( data );
+                    
+                    student.setNivelConfianca( nivel_confianca.getBelief( "ALTO" ) * 100 );
+                    
+                    new EvaluationDataTransactions().updateConfidencePercentage( student );
                     
                     tpProb = "TP_PROP: ACIMA: " + classe_tp_prob_cf.getBelief( "ACIMA" ) + "; NORMAL:" + classe_tp_prob_cf.getBelief( "NORMAL" );
                     tpHip  = "TP_HIP: ACIMA: " + classe_tp_hip_cf.getBelief(  "ACIMA" ) + "; NORMAL:" + classe_tp_hip_cf.getBelief(  "NORMAL" );
@@ -110,12 +116,13 @@ public class ClassConfidenceBayesianNet
                     e.printStackTrace();
                 }
             }
-            System.out.println( avaliacaoAluno );
-            System.out.println( tpProb );
-            System.out.println( tpHip );
-            System.out.println( propPh );
-            System.out.println( nivelCompreensao );
-            System.out.println( retomadas );
+            
+//            System.out.println( avaliacaoAluno );
+//            System.out.println( tpProb );
+//            System.out.println( tpHip );
+//            System.out.println( propPh );
+//            System.out.println( nivelCompreensao );
+//            System.out.println( retomadas );
             
             return beliefs;
         }

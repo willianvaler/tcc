@@ -15,6 +15,8 @@ import norsys.netica.Net;
 import norsys.netica.Node;
 import norsys.netica.Streamer;
 import wav.tcc.entities.Belief;
+import wav.tcc.entities.ConfidenceClassStudent;
+import wav.tcc.transactions.EvaluationDataTransactions;
 import wav.tcc.view.Tcc;
 
 /**
@@ -23,29 +25,25 @@ import wav.tcc.view.Tcc;
  */
 public class StudentEffortBayesianNet
 {
-    public List<float[]> loadEffortBayesNet() 
+    public List<Object[]> loadEffortBayesNet( List<ConfidenceClassStudent> students ) 
     {
         Tcc.getInstance();
         
         try
         {
-            List<float[]> beliefs = new ArrayList();
+            List<Object[]> beliefs = new ArrayList();
             
-            Stream<String> stream = Files.lines( Paths.get( "C:\\Users\\willi\\Desktop\\TCC STUFF\\redes\\esforco_estudante.txt" ) );
-            
-            stream.forEach( line -> 
+            for( ConfidenceClassStudent student : students )
             {
                 try
                 {
-                    String[] columns = line.split( " " );
-                    
                     Environ env = new Environ( null );
 
                     Net net = new Net( new Streamer( "C:\\Users\\willi\\Desktop\\TCC STUFF\\redes\\rede_estudante_esforcof.dne" ) );
 
                     Node classe_tp_prob_ef         = net.getNode( "Classe_tp_prob_ef" );
                     Node classe_tp_hip_ef          = net.getNode( "Classe_tp_hip_ef" );
-                    Node classe_cod_ef             = net.getNode( "Classe_tp_cod_ef" );
+                    Node classe_tp_cod_ef          = net.getNode( "Classe_tp_cod_ef" );
                     Node visualizou_pseudo         = net.getNode( "Classe_vis_pseudo" );
                     Node classe_nivel_detalhe_prob = net.getNode( "Classe_nivel_detalhe_prob" );
                     Node classe_nivel_detalhe_hip  = net.getNode( "Classe_nivel_detalhe_hip" );
@@ -54,36 +52,28 @@ public class StudentEffortBayesianNet
                     Node classe_ativ_nao           = net.getNode( "Classe_ativ_nao_realizadas" );
                     Node classe_semelhanca         = net.getNode( "Grau_semelhanca" );
                     
-                    Node nivel_confianca           = net.getNode( "Nivel_esforco" );
+                    Node nivel_esforco           = net.getNode( "Nivel_esforco" );
 
                     net.compile();
-            /*
-                    Classe_tp_prob_ef,
-                    Classe_tp_hip_ef,
-                    Classe_tp_cod_ef,
-                    Classe_vis_pseudo,
-                    Classe_nivel_detalhe_prob,
-                    Classe_nivel_detalhe_hip,
-                    Classe_nivel_compreensao,
-                    Classe_exec_cod,
-                    Classe_ativ_nao_realizadas,
-                    Grau_semelhanca,
-                    Nivel_esforco
 
-            */
-                    classe_tp_prob_ef.finding().enterState( columns[0] );
-                    classe_tp_hip_ef.finding().enterState( columns[1] );
-                    classe_cod_ef.finding().enterState(  columns[2] );
-                    visualizou_pseudo.finding().enterState( columns[3] );
-                    classe_nivel_detalhe_prob.finding().enterState( columns[4] );
-                    classe_nivel_detalhe_hip.finding().enterState( columns[5] );
-                    classe_nivel_compreensao.finding().enterState( columns[6] );
-                    execucao_codigo.finding().enterState( columns[7] );
-                    classe_ativ_nao.finding().enterState( columns[8] );
-                    classe_semelhanca.finding().enterState( columns[9] );
+                    classe_tp_prob_ef.finding().enterState( student.getClasseTPprobEF() );
+                    classe_tp_hip_ef.finding().enterState( student.getClasseTPhipEF() );
+                    classe_tp_cod_ef.finding().enterState(  student.getClasseTPcodEF() );
+                    visualizou_pseudo.finding().enterState( student.getPseudo() );
+                    classe_nivel_detalhe_prob.finding().enterState( student.getNivelDetalheProb() );
+                    classe_nivel_detalhe_hip.finding().enterState( student.getNivelDetalheHip() );
+                    classe_nivel_compreensao.finding().enterState( student.getNivelCompreensao() );
+                    execucao_codigo.finding().enterState( student.getNumeroExecucoes() );
+                    classe_ativ_nao.finding().enterState( student.getAtivNaoRealizadas() );
+                    classe_semelhanca.finding().enterState( student.getGrauSemelhanca() );
                     
+                    Object[] data = { nivel_esforco.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
                     
-                    beliefs.add( nivel_confianca.getBeliefs());
+                    beliefs.add( data );
+                    
+                    student.setNivelEsforco( nivel_esforco.getBelief( "ALTO" ) * 100 );
+                    
+                    new EvaluationDataTransactions().updateEffortPercentageStudent(student );
                     
                     env.finalize();
                 }
@@ -92,10 +82,9 @@ public class StudentEffortBayesianNet
                 {
                     e.printStackTrace();
                 }
-            });
+            }
             
             return beliefs;
-            
         }
         
         catch( Exception e )

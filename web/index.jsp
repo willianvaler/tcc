@@ -94,7 +94,7 @@
                                 %>
                             </select>
                             <button id="teste" style="width: 60px">OK</button>
-                            <div id="details" class="panel-body">
+<!--                            <div id="details" class="panel-body">
                                 <h2>Informações gerais:</h2>
                                 <table style="width: 300px;float: right;">
                                     <tr>
@@ -121,7 +121,7 @@
                                         <td colspan="2"><button onclick="$('#details').css('visibility', 'hidden');">Fechar</button></td>
                                     </tr>
                                 </table>
-                            </div>
+                            </div>-->
                             <table id="container" > </table>
                             <table id="studentContainer" > </table>
                         </div>
@@ -160,11 +160,12 @@
                             {
                                 var confidence = item[0];
                                 var effort = item[1];
+                                var name = item[2];
                                 var idConfidence = "co" + index;
                                 var idEffort = "ef" + index;
                                 
                                 $( '#container' ).prepend( $( '<tr>' +
-                                                                  '<td><div><h3>Exercício</h3></div></td>' +
+                                                                  '<td><div><h3>' + name + '</h3></div></td>' +
                                                                   '<td><div class="gauge" id="' + idConfidence + '"></div></td>' + 
                                                                   '<td><div class="gauge" id="' + idEffort     + '"></div></td>' +
                                                                '</tr>' + 

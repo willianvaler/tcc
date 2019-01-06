@@ -5,17 +5,14 @@
  */
 package wav.tcc.net;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import norsys.netica.Environ;
 import norsys.netica.Net;
 import norsys.netica.Node;
 import norsys.netica.Streamer;
-import wav.tcc.entities.Belief;
 import wav.tcc.entities.ConfidenceClassStudent;
+import wav.tcc.transactions.EvaluationDataTransactions;
 import wav.tcc.view.Tcc;
 
 /**
@@ -30,15 +27,15 @@ public class ClassEffortBayesianNet
      * @param students
      * @return
      */
-    public List<float[]> loadEffortBayesNet(  List<ConfidenceClassStudent> students ) 
+    public List<Object[]> loadEffortBayesNet(  List<ConfidenceClassStudent> students ) 
     {
         Tcc.getInstance();
         
         try
         {
-            List<float[]> beliefs = new ArrayList();
+            List<Object[]> beliefs = new ArrayList();
             
-            students.forEach( student -> 
+            for( ConfidenceClassStudent student : students )
             {
                 try
                 {
@@ -56,7 +53,7 @@ public class ClassEffortBayesianNet
                     Node classe_nivel_compreensao  = net.getNode( "Classe_nivel_compreensao" );
                     Node classe_nivel_detalhe_hip  = net.getNode( "Classe_nivel_detalhe_hip" );
                     
-                    Node nivel_confianca           = net.getNode( "Nivel_esforco" );
+                    Node nivel_esforco             = net.getNode( "Nivel_esforco" );
 
                     net.compile();
 
@@ -70,7 +67,13 @@ public class ClassEffortBayesianNet
                     classe_nivel_compreensao.finding().enterState( student.getNivelCompreensao() );
                     execucao_codigo.finding().enterState( student.getNumeroExecucoes() );
                     
-                    beliefs.add( nivel_confianca.getBeliefs() );
+                    Object[] data = { nivel_esforco.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    
+                    beliefs.add( data );
+                    
+                    student.setNivelEsforco( nivel_esforco.getBelief( "ALTO" ) * 100 );
+                    
+                    new EvaluationDataTransactions().updateEffortPercentage( student );
                     
                     env.finalize();
                 }
@@ -79,7 +82,7 @@ public class ClassEffortBayesianNet
                 {
                     e.printStackTrace();
                 }
-            });
+            }
             
             return beliefs;
             

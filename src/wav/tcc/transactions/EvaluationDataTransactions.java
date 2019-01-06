@@ -19,6 +19,219 @@ import wav.tcc.util.NetsUtil;
  */
 public class EvaluationDataTransactions 
 {
+    public List<ConfidenceClassStudent> loadReadyClassData( int classId )
+    {
+        List<ConfidenceClassStudent> students = new ArrayList();
+        
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            ResultSet result = st.executeQuery( " select dm.id," +
+                                                " ea.exercicio_id, ea.titulo, u.nome, u.sobrenome, dm.classe_tp_prob_ef, dm.classe_tp_hip_ef, dm.classe_tp_cod_ef, " +
+                                                "       dm.classe_prop_ph, dm.visualizou_pseudo, dm.execucao_codigo, dm.classe_nivel_detalhe_prob, " +
+                                                "       dm.classe_nivel_compreensao, classe_nivel_detalhe_hip, dm.classe_tp_prob_cf, dm.classe_tp_hip_cf, " +
+                                                "       dm.classe_prop_ph, dm.visualizou_pseudo, dm.visualizou_dica1, dm.visualizou_dica2, " +
+                                                "	   dm.classe_nivel_compreensao, dm.classe_retomadas, dm.classe_avaliacao_aluno " +
+                                                " from exercicio_aluno ea, dados_modafet_exercicio dm, usuario u " +
+                                                " where ea.id=dm.exercicio_aluno_id and ea.usuario_id_aluno=u.id and ea.exercicio_id = " + classId +
+                    
+                                                " order by dm.classe_tp_prob_ef, dm.classe_tp_hip_ef, dm.classe_tp_cod_ef, " +
+                                                "       dm.classe_prop_ph, dm.visualizou_pseudo, dm.execucao_codigo, dm.classe_nivel_detalhe_prob, " +
+                                                "       dm.classe_nivel_compreensao, classe_nivel_detalhe_hip " );
+            
+            while( result.next() )
+            {
+                ConfidenceClassStudent student = new ConfidenceClassStudent();
+                
+                /*GENERAL DATA*/
+                student.setDataId( result.getInt( "id" ) );
+                student.setNome( result.getString( "nome" ) );
+                student.setSobrenome( result.getString( "sobrenome" ) );
+                student.setNivelCompreensao( result.getString( "classe_nivel_compreensao" ) );
+                student.setClassePropPH( result.getString( "classe_prop_ph" ) );
+                student.setDica1( result.getString( "visualizou_dica1" ) );
+                student.setDica2( result.getString( "visualizou_dica2" ) );
+                student.setPseudo( result.getString( "visualizou_pseudo" ) );
+
+                /*CONFIANÇA*/
+                student.setClasseTPprobCF( result.getString( "classe_tp_prob_cf" ) );
+                student.setClasseTPhipCF( result.getString( "classe_tp_hip_cf" ) );
+                student.setRetomadas( result.getString( "classe_retomadas" ) );
+                student.setAvaliacaoAluno( result.getString( "classe_avaliacao_aluno" ) );
+
+                /*ESFORÇO*/
+                student.setClasseTPprobEF( result.getString( "classe_tp_prob_ef" ) );
+                student.setClasseTPhipEF(  result.getString( "classe_tp_hip_ef" ) );
+                student.setClasseTPcodEF( result.getString( "classe_tp_cod_ef" ) );
+                student.setNivelDetalheHip( result.getString( "classe_nivel_detalhe_hip" ) );
+                student.setNivelDetalheProb( result.getString( "classe_nivel_detalhe_prob" ) );
+                student.setNumeroExecucoes( result.getString( "execucao_codigo" ) );
+
+                students.add( student );
+                
+            }
+            
+        }
+        
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        
+        return students;
+    }
+    
+    /**
+     * 
+     * @param classId
+     * @return 
+     */
+    public List<ConfidenceClassStudent> loadReadyStudentData( int classId )
+    {
+        List<ConfidenceClassStudent> students = new ArrayList();
+        
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            ResultSet result = st.executeQuery( " select dm.id," 
+                                                    + " u.nome, u.sobrenome, "
+                                                    + " dm.classe_tp_prob_ef, "
+                                                    + " dm.classe_tp_hip_ef, "
+                                                    + " dm.classe_tp_cod_ef, "
+                                                    + " dm.classe_tp_ph_ef, "
+                                                    + " dm.classe_nivel_detalhe_prob, " 
+                                                    + " dm.classe_nivel_detalhe_hip, "
+                                                    + " dm.classe_nivel_compreensao, "
+                                                    + " dm.classe_prop_ph_cf, "
+                                                    + " dm.classe_tp_prob_cf, "
+                                                    + " dm.classe_tp_hip_cf, " 
+                                                    + " dm.classe_vis_pseudo, "
+                                                    + " dm.classe_vis_dica1, "
+                                                    + " dm.classe_vis_dica2, " 
+                                                    + " dm.classe_exec_codigo, "
+                                                    + " dm.classe_retomadas, "
+                                                    + " dm.classe_avaliacao_aluno,"
+                                                    + " dm.classe_ativ_nao_realizadas, "
+                                                    + " dm.grau_semelhanca " 
+                                                + " from turma t, dados_modafet_estudante dm, usuario u, turma_has_usuario tm " 
+                                                + " where t.id = dm.turma_id and tm.usuario_id = u.id and dm.usuario_id = u.id and tm.usuario_id = dm.usuario_id"
+                                                + " and t.id = tm.turma_id and dm.turma_id = " + classId );
+            while( result.next() )
+            {
+                ConfidenceClassStudent student = new ConfidenceClassStudent();
+                
+                /*GENERAL DATA*/
+                student.setDataId( result.getInt( "id" ) );
+                student.setNome( result.getString( "nome" ) );
+                student.setSobrenome( result.getString( "sobrenome" ) );
+                student.setNivelCompreensao( result.getString( "classe_nivel_compreensao" ) );
+                student.setDica1( result.getString( "classe_vis_dica1" ) );
+                student.setDica2( result.getString( "classe_vis_dica2" ) );
+                student.setPseudo( result.getString( "classe_vis_pseudo" ) );
+
+                /*CONFIANÇA*/
+                student.setClasseTPprobCF( result.getString( "classe_tp_prob_cf" ) );
+                student.setClasseTPhipCF( result.getString( "classe_tp_hip_cf" ) );
+                student.setRetomadas( result.getString( "classe_retomadas" ) );
+                student.setAvaliacaoAluno( result.getString( "classe_avaliacao_aluno" ) );
+                student.setClassePropPH_CF( result.getString( "classe_prop_ph_cf" ) );
+
+                /*ESFORÇO*/
+                student.setClasseTPprobEF( result.getString( "classe_tp_prob_ef" ) );
+                student.setClasseTPhipEF(  result.getString( "classe_tp_hip_ef" ) );
+                student.setClasseTPcodEF( result.getString( "classe_tp_cod_ef" ) );
+                student.setNivelDetalheHip( result.getString( "classe_nivel_detalhe_hip" ) );
+                student.setNivelDetalheProb( result.getString( "classe_nivel_detalhe_prob" ) );
+                student.setNumeroExecucoes( result.getString( "classe_exec_codigo" ) );
+                student.setClasseTPphEF( result.getString( "classe_tp_ph_ef" ) );
+                student.setAtivNaoRealizadas( result.getString( "classe_ativ_nao_realizadas" ) );
+                student.setGrauSemelhanca( result.getString( "grau_semelhanca" ) );
+
+                students.add( student );
+            }
+            
+        }
+        
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        
+        return students;
+    }
+    
+    /**
+     * 
+     * @param student 
+     */
+    public void updateConfidencePercentage( ConfidenceClassStudent student )
+    {
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            st.executeUpdate( "update dados_modafet_exercicio dm set dm.nivel_confianca =  " + student.getNivelConfianca() + "  where  dm.id = " + student.getDataId() );
+        }
+        
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 
+     * @param student 
+     */
+    public void updateEffortPercentage( ConfidenceClassStudent student )
+    {
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            st.executeUpdate( "update dados_modafet_exercicio dm set dm.nivel_esforco =  " + student.getNivelEsforco() + "  where  dm.id = " + student.getDataId() );
+        }
+        
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateConfidencePercentageStudent( ConfidenceClassStudent student )
+    {
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            st.executeUpdate( "update dados_modafet_estudante dm set dm.nivel_confianca =  " + student.getNivelConfianca() + "  where  dm.id = " + student.getDataId() );
+        }
+        
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 
+     * @param student 
+     */
+    public void updateEffortPercentageStudent( ConfidenceClassStudent student )
+    {
+        try 
+        {
+            Statement st = Database.getInstance().getConnection().createStatement();
+            
+            st.executeUpdate( "update dados_modafet_estudante dm set dm.nivel_esforco =  " + student.getNivelEsforco() + "  where  dm.id = " + student.getDataId() );
+        }
+        
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
     public List<ConfidenceClassStudent> loadClassData( int classId )
     {
         List<ConfidenceClassStudent> students = new ArrayList();
@@ -132,40 +345,5 @@ public class EvaluationDataTransactions
         }
         
         return students;
-    }
-    
-    public List<ConfidenceClassStudent> getStudentsList()
-    {
-        /*esforço*/
-         /*
-                    Classe_tp_prob_ef,
-                    Classe_tp_hip_ef,
-                    Classe_tp_cod_ef,
-                    Classe_vis_pseudo,
-                    Classe_nivel_detalhe_prob,
-                    Classe_nivel_detalhe_hip,
-                    Classe_nivel_compreensao,
-                    Classe_exec_cod,
-                    Classe_ativ_nao_realizadas,
-                    Grau_semelhanca,
-                    Nivel_esforco
-
-            */
-        /*confiança*/
-        /*
-                    classe_tp_prob_cf,
-                    classe_tp_hip_cf,
-                    classe_prop_ph_cf,
-                    classe_vis_dica1,
-                    classe_vis_dica2,
-                    classe_vis_pseudo,
-                    classe_retomadas,
-                    classe_nivel_compreensao,
-                    classe_avaliacao_aluno,
-                    nivel_confianca
-
-            */
-        
-        return new ArrayList();
     }
 }

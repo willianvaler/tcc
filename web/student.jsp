@@ -46,25 +46,20 @@
           </style>
     </head>
     <body>
-<!--        <ol>
-            <%%>
-            <li></li>
-            <%%>
-        </ol>-->
         <div class="page-content">
             <div class="row">
                 <jsp:include page = "aside.jsp" />
                 <div class="col-md-10">
                     <div class="content-box-large">
                         <div class="panel-body">
-                            <select name="classes" style="width: 40%">
+                            <select id="classes" style="width: 40%">
                                 <%
                                     List<Turma> turmas = new ClassTransactions().getTurmas();
                                     
                                     for( Turma t : turmas )
                                     {
                                 %>
-                                        <option itemprop="<%=t.getId()%>"> <%=t.getName()%> </option>
+                                        <option value="<%=t.getId()%>"> <%=t.getName() + " - " + t.getId()%> </option>
                                 <%
                                     }
                                 %>
@@ -93,9 +88,12 @@
                             levelColors: [ "#026607"]
                         });
                     }
-
+                    
                     $(document).on( "click", "#teste", function(){   
-                        $.get( "StudentNets", function( data ){
+                        var e = document.getElementById( "classes" );
+                        var id = e.options[e.selectedIndex].value;
+                    
+                        $.get( "StudentNets", {ClassId:id}, function( data ){
 
                             $( '#container' ).empty();
                             
@@ -103,11 +101,13 @@
                                 
                                 var confidence = item[0];
                                 var effort = item[1];
+                                var name = item[2];
+                                
                                 var idConfidence = "co" + index;
                                 var idEffort = "ef" + index;
                                 
                                 $( '#container' ).prepend( $( '<tr>' +
-                                                                  '<td><div><h3>Aluno ' + (index + 1) + '</h3></div></td>' +
+                                                                  '<td><div><h3>' + name + '</h3></div></td>' +
                                                                   '<td><div class="gauge" id="' + idConfidence + '"></div></td>' + 
                                                                   '<td><div class="gauge" id="' + idEffort     + '"></div></td>' +
                                                                '</tr>' ) );

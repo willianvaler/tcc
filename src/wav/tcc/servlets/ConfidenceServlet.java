@@ -66,7 +66,6 @@ public class ConfidenceServlet extends HttpServlet
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -81,18 +80,31 @@ public class ConfidenceServlet extends HttpServlet
     {
         String id = request.getParameter( "ExerciseId" );
         
-        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadClassData( Integer.valueOf( id ) );
+        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadReadyClassData( Integer.valueOf( id ) );
         
-        List<float[]> data = new ArrayList();
+        List<Object> data = new ArrayList();
         
-        if (students != null && !students.isEmpty() ) 
+        if ( students != null && !students.isEmpty() ) 
         {
-            List<float[]> confidenceBeliefs = new ClassConfidenceBayesianNet().loadConfidenceBayesNet( students );
-            List<float[]> effortBeliefs     = new ClassEffortBayesianNet().loadEffortBayesNet( students );
+            List<Object[]> confidenceBeliefs = new ClassConfidenceBayesianNet().loadConfidenceBayesNet( students );
+            List<Object[]> effortBeliefs     = new ClassEffortBayesianNet().loadEffortBayesNet( students );
 
             for( int i = 0; i < students.size(); i++ )
             {
-                data.add( new float[]{ confidenceBeliefs.get( i )[0], effortBeliefs.get( i )[0] } );
+                float[] confidence = (float[]) confidenceBeliefs.get( i )[0];
+                float[] effort     = (float[]) effortBeliefs.get( i )[0];
+                String name1       = (String)confidenceBeliefs.get(i)[1];
+                String name2       = (String)effortBeliefs.get(i)[1];
+                
+                if (name1.equals(name2)) 
+                {
+                    data.add( new Object[]{ confidence[0], effort[0], name1 } );
+                }
+                
+                else
+                {
+                    System.out.println("problema no order");
+                }
             }
         }
         
@@ -136,7 +148,7 @@ public class ConfidenceServlet extends HttpServlet
     public String getServletInfo()
     {
         return "Short description";
-    }// </editor-fold>
+    }
 
     
     private void forward( String page )

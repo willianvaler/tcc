@@ -5,15 +5,14 @@
  */
 package wav.tcc.net;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import norsys.netica.Environ;
 import norsys.netica.Net;
 import norsys.netica.Node;
 import norsys.netica.Streamer;
+import wav.tcc.entities.ConfidenceClassStudent;
+import wav.tcc.transactions.EvaluationDataTransactions;
 import wav.tcc.view.Tcc;
 
 /**
@@ -22,23 +21,19 @@ import wav.tcc.view.Tcc;
  */
 public class StudentConfidenceBayesianNet
 {
-    public List<float[]> loadConfidenceBayesNet() 
+    public List<Object[]> loadConfidenceBayesNet( List<ConfidenceClassStudent> students ) 
     {
         Tcc.getInstance();
         
         try
         {
+            List<Object[]> beliefs = new ArrayList();
             
-            List<float[]> beliefs = new ArrayList();
-            
-            Stream<String> stream = Files.lines( Paths.get( "C:\\Users\\willi\\Desktop\\TCC STUFF\\redes\\confianca_estudante.txt" ) );
-            
-            stream.forEach( line -> 
+//            Stream<String> stream = Files.lines( Paths.get( "C:\\Users\\willi\\Desktop\\TCC STUFF\\redes\\confianca_estudante.txt" ) );
+            for( ConfidenceClassStudent student : students )
             {
                 try
                 {
-                    String[] columns = line.split( " " );
-                    
                     Environ env = new Environ( null );
 
                     Net net = new Net( new Streamer( "C:\\Users\\willi\\Desktop\\TCC STUFF\\redes\\rede_estudante_confianca.dne" ) );
@@ -55,31 +50,24 @@ public class StudentConfidenceBayesianNet
                     Node nivel_confianca          = net.getNode( "nivel_confianca" );
 
                     net.compile();
-            /*
-                    classe_tp_prob_cf,
-                    classe_tp_hip_cf,
-                    classe_prop_ph_cf,
-                    classe_vis_dica1,
-                    classe_vis_dica2,
-                    classe_vis_pseudo,
-                    classe_retomadas,
-                    classe_nivel_compreensao,
-                    classe_avaliacao_aluno,
-                    nivel_confianca
 
-            */
-                    classe_tp_prob_cf.finding().enterState( columns[0] );
-                    classe_tp_hip_cf.finding().enterState( columns[1] );
-                    classe_prop_ph_cf.finding().enterState( columns[2] );
-                    visualizou_dica1.finding().enterState( columns[3] );
-                    visualizou_dica2.finding().enterState( columns[4] );
-                    visualizou_pseudo.finding().enterState( columns[5] );
-                    classe_retomadas.finding().enterState( columns[6] );
-                    classe_nivel_compreensao.finding().enterState( columns[7] );
-                    avaliacao_aluno.finding().enterState( columns[8] );
+                    classe_tp_prob_cf.finding().enterState( student.getClasseTPprobCF() );
+                    classe_tp_hip_cf.finding().enterState( student.getClasseTPhipCF() );
+                    classe_prop_ph_cf.finding().enterState( student.getClassePropPH_CF() );
+                    visualizou_dica1.finding().enterState( student.getDica1() );
+                    visualizou_dica2.finding().enterState( student.getDica2() );
+                    visualizou_pseudo.finding().enterState( student.getPseudo() );
+                    classe_retomadas.finding().enterState( student.getRetomadas() );
+                    classe_nivel_compreensao.finding().enterState( student.getNivelCompreensao() );
+                    avaliacao_aluno.finding().enterState( student.getAvaliacaoAluno() );
                     
+                    Object[] data = { nivel_confianca.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
                     
-                    beliefs.add( nivel_confianca.getBeliefs() );
+                    beliefs.add( data );
+                    
+                    student.setNivelConfianca( nivel_confianca.getBelief( "ALTO" ) * 100 );
+                    
+                    new EvaluationDataTransactions().updateConfidencePercentageStudent( student );
                     
                     env.finalize();
                 }
@@ -88,8 +76,7 @@ public class StudentConfidenceBayesianNet
                 {
                     e.printStackTrace();
                 }
-            });
-            
+            }
             
             return beliefs;
         }
@@ -97,7 +84,6 @@ public class StudentConfidenceBayesianNet
         catch( Exception e )
         {
             e.printStackTrace();
-//            env.finalize();
         }
         
         return new ArrayList();

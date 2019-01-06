@@ -35,10 +35,16 @@ public class ConfidenceClassStudent
     private String classeTPprobCF;
     private String classeTPhipCF;
     private String classePropPH;
+    private String classePropPH_CF;
     private String classeTPprobEF;
     private String classeTPhipEF;
     private String classeTPcodEF;
-    private int classId;
+    private String classeTPphEF;
+    private String ativNaoRealizadas;
+    private String grauSemelhanca;
+    private int dataId;
+    private float nivelConfianca;
+    private float nivelEsforco;
 
     /**
      * @return the detalhePontosChave
@@ -251,17 +257,57 @@ public class ConfidenceClassStudent
     /**
      * @return the classId
      */
-    public int getClassId()
+    public int getDataId()
     {
-        return classId;
+        return dataId;
     }
 
     /**
-     * @param classId the classId to set
+     * @param dataId the classId to set
      */
-    public void setClassId(int classId)
+    public void setDataId(int dataId)
     {
-        this.classId = classId;
+        this.dataId = dataId;
+    }
+
+    public String getClassePropPH_CF() 
+    {
+        return classePropPH_CF;
+    }
+
+    public void setClassePropPH_CF(String classePropPH_CF) 
+    {
+        this.classePropPH_CF = classePropPH_CF;
+    }
+
+    public void setClasseTPphEF(String classeTPphEF) 
+    {
+        this.classeTPphEF = classeTPphEF;
+    }
+
+    public String getClasseTPphEF() 
+    {
+        return classeTPphEF;
+    }
+
+    public String getGrauSemelhanca() 
+    {
+        return grauSemelhanca;
+    }
+
+    public void setAtivNaoRealizadas(String ativNaoRealizadas) 
+    {
+        this.ativNaoRealizadas = ativNaoRealizadas;
+    }
+
+    public void setGrauSemelhanca(String grauSemelhanca) 
+    {
+        this.grauSemelhanca = grauSemelhanca;
+    }
+
+    public String getAtivNaoRealizadas() 
+    {
+        return ativNaoRealizadas;
     }
 
     public String getDica1()
@@ -427,5 +473,24 @@ public class ConfidenceClassStudent
     {
         this.nivelDetalheProb = nivelDetalheProb;
     }
-    
+
+    public float getNivelConfianca() 
+    {
+        return nivelConfianca;
+    }
+
+    public float getNivelEsforco() 
+    {
+        return nivelEsforco;
+    }
+
+    public void setNivelConfianca(float nivelConfianca) 
+    {
+        this.nivelConfianca = nivelConfianca;
+    }
+
+    public void setNivelEsforco(float nivelEsforco) 
+    {
+        this.nivelEsforco = nivelEsforco;
+    }
 }
