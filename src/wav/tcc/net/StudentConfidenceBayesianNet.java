@@ -61,7 +61,7 @@ public class StudentConfidenceBayesianNet
                     classe_nivel_compreensao.finding().enterState( student.getNivelCompreensao() );
                     avaliacao_aluno.finding().enterState( student.getAvaliacaoAluno() );
                     
-                    Object[] data = { nivel_confianca.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    Object[] data = { new float[]{ nivel_confianca.getBelief( "ALTO" ), nivel_confianca.getBelief( "BAIXO" ) }, student.getNome() + " " + student.getSobrenome() };
                     
                     beliefs.add( data );
                     

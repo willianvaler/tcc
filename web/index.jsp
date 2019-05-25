@@ -171,7 +171,6 @@
                                                                '</tr>' + 
                                                                '<tr>' +
                                                                '<td></td>' +
-                                                               '<td><button id="moreInformation">Mais Informações</button></td>' +
                                                                '</tr>') );
                                                        
                                 addGauge( idConfidence, confidence *100, "Confiança" );

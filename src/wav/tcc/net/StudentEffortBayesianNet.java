@@ -67,7 +67,7 @@ public class StudentEffortBayesianNet
                     classe_ativ_nao.finding().enterState( student.getAtivNaoRealizadas() );
                     classe_semelhanca.finding().enterState( student.getGrauSemelhanca() );
                     
-                    Object[] data = { nivel_esforco.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    Object[] data = { new float[]{ nivel_esforco.getBelief( "ALTO" ), nivel_esforco.getBelief( "BAIXO" ) }, student.getNome() + " " + student.getSobrenome() };
                     
                     beliefs.add( data );
                     

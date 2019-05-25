@@ -117,6 +117,26 @@ public class NetsUtil
     }
     
     /**
+     * 
+     * @param evaluation
+     * @return 
+     */
+    public static int getWeightStudentEvaluation( String evaluation )
+    {
+        /** 1 Fácil, 2 Médio, 3 Difícil **/
+        switch ( evaluation )
+        {
+            case "FACIL":
+                return 1;
+            case "MEDIO":
+                return 2;
+            case "DIFICIL":
+            default:
+                return 3;
+        }
+    }
+    
+    /**
      * Retorna o nível da compreesao do aluno
      * 
      * @param nivel
@@ -134,4 +154,85 @@ public class NetsUtil
                 return "ALTO";
         }
     }
+    
+    /**
+     * 
+     * @param description
+     * @return 
+     */
+    public static int getWeight( String description )
+    {
+        switch ( description )
+        {
+            case "BAIXO":
+                return 1;
+            case "MEDIO":
+                return 2;
+            case "ALTO":
+                return 3;
+            default:
+                return 1;
+        }
+    }
+    
+    /**
+     * 
+     * @param countDicas
+     * @param countMaxExercicios
+     * @return 
+     */
+    public static String getDicaAvaliacao( int countDicas, int countMaxExercicios )
+    {
+        if ( countDicas == 0 ) { return "NENHUMA"; }
+        else if( countDicas < ( countMaxExercicios / 2) ) { return "POUCAS"; }
+        else { return "MUITAS"; }
+    }
+    
+    /**
+     * 
+     * @param countPseudo
+     * @param countMaxExercicios
+     * @return 
+     */
+    public static String getPseudoAvaliacao( int countPseudo, int countMaxExercicios )
+    {
+        if ( countPseudo == 0 ) { return "NENHUMA"; }
+        else if( countPseudo < ( countMaxExercicios * 0.3) ) { return "POUCAS"; }
+        else { return "MUITAS"; }
+    }
+    
+    /**
+     * returns the right category depending of student points
+     * 
+     * @param studentPoints
+     * @param maxPoints
+     * @return 
+     */
+    public static String getPointsCategory( double studentPoints, double maxPoints )
+    {
+        double percent = ( studentPoints / maxPoints ) * 100;
+
+        if (percent <= 25 ) { return "BAIXO"; }
+        else if ( percent > 25 && percent < 50 ){ return "MEDIO_BAIXO"; }
+        else if ( percent >= 50 && percent < 75 ){ return "MEDIO_ALTO"; }
+        else { return "ALTO"; }
+    }
+    
+    /**
+     * 
+     * @param studentPoints
+     * @param maxPoints
+     * @return 
+     */
+    public static String getEvaluationCategory( double studentPoints, double maxPoints )
+    {
+        double percent = ( studentPoints / maxPoints ) * 100;
+
+        if (percent <= 25 ) { return "FACIL"; }
+        else if ( percent > 25 && percent < 50 ){ return "MEDIO_FACIL"; }
+        else if ( percent >= 50 && percent < 75 ){ return "MEDIO_DIFICIL"; }
+        else { return "DIFCIL"; }
+    }
+    
+//    public static String get
 }

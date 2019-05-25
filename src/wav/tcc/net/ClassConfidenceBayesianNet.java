@@ -78,7 +78,7 @@ public class ClassConfidenceBayesianNet
                     classe_nivel_comprensao.finding().enterState( student.getNivelCompreensao() );
                     avaliacao_aluno.finding().enterState( student.getAvaliacaoAluno() );
                     
-                    Object[] data = { nivel_confianca.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    Object[] data = { new float[]{ nivel_confianca.getBelief( "ALTO" ), nivel_confianca.getBelief( "BAIXO" ) }, student.getNome() + " " + student.getSobrenome() };
                     
                     beliefs.add( data );
                     
@@ -86,17 +86,17 @@ public class ClassConfidenceBayesianNet
                     
                     new EvaluationDataTransactions().updateConfidencePercentage( student );
                     
-                    tpProb = "TP_PROP: ACIMA: " + classe_tp_prob_cf.getBelief( "ACIMA" ) + "; NORMAL:" + classe_tp_prob_cf.getBelief( "NORMAL" );
-                    tpHip  = "TP_HIP: ACIMA: " + classe_tp_hip_cf.getBelief(  "ACIMA" ) + "; NORMAL:" + classe_tp_hip_cf.getBelief(  "NORMAL" );
-                    propPh = "PROP_PH: PROPORCIONAL: " + classe_prop_ph.getBelief( "PROPORCIONAL" ) + "; DESPROPORCIONAL: " + classe_prop_ph.getBelief( "DESPROPORCIONAL" );
-                    visDi1 = "Visualizou dica 1: SIM:"  + visualizou_dica1.getBelief( "S" ) + "; NÃO: " + visualizou_dica1.getBelief( "N" );
-                    visDi2 = "Visualizou dica 2: SIM:"  + visualizou_dica2.getBelief( "S" ) + "; NÃO: " + visualizou_dica2.getBelief( "N" );
-                    visPseudo = "Visualizou pseudo: SIM:"  + visualizou_pseudo.getBelief( "S" ) + "; NÃO: " + visualizou_pseudo.getBelief( "N" );
-                    nivelCompreensao = "Nível compreenção: BAIXO: " + classe_nivel_comprensao.getBelief( "BAIXO" ) + "; MEDIO:" 
-                                                    + classe_nivel_comprensao.getBelief( "MEDIO" ) + " ; ALTO: " + classe_nivel_comprensao.getBelief( "ALTO" );
-                    retomadas = "Retomadas: NENHUMA: " + classe_retomadas.getBelief( "NENHUMA" ) + "; POUCAS: " + classe_retomadas.getBelief( "POUCAS" ) + "; MUITAS:" + classe_retomadas.getBelief( "MUITAS" );
-                    
-                    avaliacaoAluno = "Avaliação aluno: DIFÍCIL: " + avaliacao_aluno.getBelief( "DIFICIL" ) + "; MÉDIO: " + avaliacao_aluno.getBelief( "MEDIO" ) + "; FÁCIL: " + avaliacao_aluno.getBelief( "FACIL" );
+//                    tpProb = "TP_PROP: ACIMA: " + classe_tp_prob_cf.getBelief( "ACIMA" ) + "; NORMAL:" + classe_tp_prob_cf.getBelief( "NORMAL" );
+//                    tpHip  = "TP_HIP: ACIMA: " + classe_tp_hip_cf.getBelief(  "ACIMA" ) + "; NORMAL:" + classe_tp_hip_cf.getBelief(  "NORMAL" );
+//                    propPh = "PROP_PH: PROPORCIONAL: " + classe_prop_ph.getBelief( "PROPORCIONAL" ) + "; DESPROPORCIONAL: " + classe_prop_ph.getBelief( "DESPROPORCIONAL" );
+//                    visDi1 = "Visualizou dica 1: SIM:"  + visualizou_dica1.getBelief( "S" ) + "; NÃO: " + visualizou_dica1.getBelief( "N" );
+//                    visDi2 = "Visualizou dica 2: SIM:"  + visualizou_dica2.getBelief( "S" ) + "; NÃO: " + visualizou_dica2.getBelief( "N" );
+//                    visPseudo = "Visualizou pseudo: SIM:"  + visualizou_pseudo.getBelief( "S" ) + "; NÃO: " + visualizou_pseudo.getBelief( "N" );
+//                    nivelCompreensao = "Nível compreenção: BAIXO: " + classe_nivel_comprensao.getBelief( "BAIXO" ) + "; MEDIO:" 
+//                                                    + classe_nivel_comprensao.getBelief( "MEDIO" ) + " ; ALTO: " + classe_nivel_comprensao.getBelief( "ALTO" );
+//                    retomadas = "Retomadas: NENHUMA: " + classe_retomadas.getBelief( "NENHUMA" ) + "; POUCAS: " + classe_retomadas.getBelief( "POUCAS" ) + "; MUITAS:" + classe_retomadas.getBelief( "MUITAS" );
+//                    
+//                    avaliacaoAluno = "Avaliação aluno: DIFÍCIL: " + avaliacao_aluno.getBelief( "DIFICIL" ) + "; MÉDIO: " + avaliacao_aluno.getBelief( "MEDIO" ) + "; FÁCIL: " + avaliacao_aluno.getBelief( "FACIL" );
 //                    System.out.println( "NOme:" + student.getNome() + " " + student.getSobrenome()
 //                                        + "-  Classe_tp_prob_cf: " + student.getClasseTPprobCF() + 
 //                                       " - Classe_tp_hip_cf:" + student.getClasseTPhipCF() +

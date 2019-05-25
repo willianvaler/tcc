@@ -31,11 +31,11 @@
                                     <i class="glyphicon glyphicon-stats"></i>Aluno
                                 </a>
                             </li>
-                            <li class="current">
+<!--                            <li class="current">
                                 <a href="">
                                     <i class="glyphicon glyphicon-stats"></i>Turma
                                 </a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </div>

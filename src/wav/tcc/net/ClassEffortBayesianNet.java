@@ -67,7 +67,7 @@ public class ClassEffortBayesianNet
                     classe_nivel_compreensao.finding().enterState( student.getNivelCompreensao() );
                     execucao_codigo.finding().enterState( student.getNumeroExecucoes() );
                     
-                    Object[] data = { nivel_esforco.getBeliefs(), student.getNome() + " " + student.getSobrenome() };
+                    Object[] data = { new float[]{ nivel_esforco.getBelief( "ALTO" ), nivel_esforco.getBelief( "BAIXO" ) }, student.getNome() + " " + student.getSobrenome() };
                     
                     beliefs.add( data );
                     
