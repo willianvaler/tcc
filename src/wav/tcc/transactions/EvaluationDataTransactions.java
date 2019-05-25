@@ -356,6 +356,11 @@ public class EvaluationDataTransactions
     
     /**
      * treina a rede com os dados carregados do metodo loadStudentData
+     * 
+     * Para resumir as variáveis de classes para o problema e hipótese relacionadas a confiança (classe_tp_prob_cf, classe_tp_hip_cf) 
+     *      usa-se uma regra que conta o número de vezes que foi acima, se nenhuma vez ocorreu, a classe é NENHUMA, menos de 50%, 
+     *      POUCAS e mais de 50%, MUITAS. O mesmo se aplica ao campo da proporção (classe_prop_ph), para o qual avalia-se de foi
+     *      mais de 50% das vezes desproporcional, se foi menos de 50% ou nenhuma vez desproporcional.
      * @param classId
      * @return 
      */
@@ -383,12 +388,6 @@ public class EvaluationDataTransactions
             
             ConfidenceClassStudent tempStudent = null;
             
-            /*
-                Para resumir as variáveis de classes para o problema e hipótese relacionadas a confiança (classe_tp_prob_cf, classe_tp_hip_cf) 
-            usa-se uma regra que conta o número de vezes que foi acima, se nenhuma vez ocorreu, a classe é NENHUMA, menos de 50%, 
-            POUCAS e mais de 50%, MUITAS. O mesmo se aplica ao campo da proporção (classe_prop_ph), para o qual avalia-se de foi
-            mais de 50% das vezes desproporcional, se foi menos de 50% ou nenhuma vez desproporcional.
-            */
             for( ConfidenceClassStudent student : userData )
             {
                 if ( student.getDica1 ().equals( "S" ) ) { countDica1++; }

@@ -70,11 +70,6 @@
           </style>
     </head>
     <body>
-<!--        <ol>
-            <%%>
-            <li></li>
-            <%%>
-        </ol>-->
         <div class="page-content" style="position: relative;">
             <div class="row" style="position: relative;z-index: 1;">
                 <jsp:include page = "aside.jsp" />
@@ -93,35 +88,7 @@
                                     }
                                 %>
                             </select>
-                            <button id="teste" style="width: 60px">OK</button>
-<!--                            <div id="details" class="panel-body">
-                                <h2>Informações gerais:</h2>
-                                <table style="width: 300px;float: right;">
-                                    <tr>
-                                        <td style="width: 150px;"><p>Visualizou Dicas:</p></td>
-                                        <td style="width: 150px;"><p>90% Não</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px;"><p>Visualizou Pseudo:</p></td>
-                                        <td style="width: 150px;"><p>85% Não</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px;"><p>Executou Código</p></td>
-                                        <td style="width: 150px;"><p>98% Sim</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px;"><p>Nível de Compreensão:</p></td>
-                                        <td style="width: 150px;"><p>Médio</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 150px;"><p>Retomadas</p></td>
-                                        <td style="width: 150px;"><p>Poucas</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><button onclick="$('#details').css('visibility', 'hidden');">Fechar</button></td>
-                                    </tr>
-                                </table>
-                            </div>-->
+                            <button id="okButton" style="width: 60px">OK</button>
                             <table id="container" > </table>
                             <table id="studentContainer" > </table>
                         </div>
@@ -146,7 +113,7 @@
                         });
                     }
                     
-                    $(document).on( "click", "#teste", function()
+                    $(document).on( "click", "#okButton", function()
                     {   
                         var e = document.getElementById( "exercises" );
                         var id = e.options[e.selectedIndex].value;
