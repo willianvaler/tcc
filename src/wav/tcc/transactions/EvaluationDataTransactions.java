@@ -306,9 +306,9 @@ public class EvaluationDataTransactions
                 double probMediaDobrada = NetsUtil.calculateDoubleAverage( minutosPontoChave );
                 double hipMediaDobrada = NetsUtil.calculateDoubleAverage( minutosHipotese );
 
-                int [] qDetalhePontoChave = NetsUtil.getQuartiles( detalhePontoChave );
-                int [] qDetalheHipotese = NetsUtil.getQuartiles( detalheHipotese );
-                int [] qDetalheCodigo = NetsUtil.getQuartiles( detalheCodigo );
+                int [] qMinPontoChave = NetsUtil.getQuartiles( minutosPontoChave );
+                int [] qMinHipotese = NetsUtil.getQuartiles( minutosHipotese );
+                int [] qMinCodigo = NetsUtil.getQuartiles( minutosCodigo );
 
                 for( int i = 0; i < nome.size(); i++ )
                 {
@@ -332,11 +332,13 @@ public class EvaluationDataTransactions
                     student.setClasseTPhipCF( ( minutosHipotese.get( i ) >= hipMediaDobrada ? "ACIMA" : "NORMAL" ) );
                     student.setRetomadas( ( retomada == 0 ? "NENHUMA" : ( retomada <= 2 ? "POUCAS" : "MUITAS" ) ) );
                     student.setAvaliacaoAluno( NetsUtil.getAvaliacaoEstudante( avaliacaoAluno.get( i ) ) );
-
+                    compilacoesErro.get(i);
+                    minutosCodigo.get(i);
+                    numeroCompilacoes.get(i);
                     /*ESFORÇO*/
-                    student.setClasseTPprobEF( NetsUtil.getQuartileEvaluation( qDetalhePontoChave[0], qDetalhePontoChave[1], minutosPontoChave.get( i ) ) );
-                    student.setClasseTPhipEF(  NetsUtil.getQuartileEvaluation( qDetalheHipotese[0],   qDetalheHipotese[1],   minutosHipotese.get( i ) ) );
-                    student.setClasseTPcodEF(  NetsUtil.getQuartileEvaluation( qDetalheCodigo[0],     qDetalheCodigo[1],     minutosCodigo.get( i ) ) );
+                    student.setClasseTPprobEF( NetsUtil.getQuartileEvaluation( qMinPontoChave[0], qMinPontoChave[1], minutosPontoChave.get( i ) ) );
+                    student.setClasseTPhipEF(  NetsUtil.getQuartileEvaluation( qMinHipotese[0],   qMinHipotese[1],   minutosHipotese.get( i ) ) );
+                    student.setClasseTPcodEF(  NetsUtil.getQuartileEvaluation( qMinCodigo[0],     qMinCodigo[1],     minutosCodigo.get( i ) ) );
                     student.setNivelDetalheHip( NetsUtil.getNivel( detalheHipotese.get( i ) ) );
                     student.setNivelDetalheProb( NetsUtil.getNivel( detalhePontoChave.get( i ) ) );
                     student.setNumeroExecucoes( ( numeroExecucoes.get( i ) >= 1 ? "S" : "N" ) );

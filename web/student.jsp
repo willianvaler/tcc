@@ -93,7 +93,7 @@
                         var e = document.getElementById( "classes" );
                         var id = e.options[e.selectedIndex].value;
                     
-                        $.get( "StudentNets", {ClassId:id}, function( data ){
+                        $.get( "ClassServlet", {ClassId:id}, function( data ){
 
                             $( '#container' ).empty();
                             

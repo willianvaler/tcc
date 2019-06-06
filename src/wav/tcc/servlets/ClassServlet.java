@@ -10,29 +10,27 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import wav.tcc.entities.Belief;
 import wav.tcc.entities.ConfidenceClassStudent;
-import wav.tcc.net.ClassConfidenceBayesianNet;
-import wav.tcc.net.ClassEffortBayesianNet;
+import wav.tcc.net.StudentConfidenceBayesianNet;
+import wav.tcc.net.StudentEffortBayesianNet;
 import wav.tcc.transactions.EvaluationDataTransactions;
 
 /**
  *
  * @author willi
  */
-@WebServlet(name = "ConfidenceServlet", urlPatterns =
+@WebServlet(name = "ClassServlet", urlPatterns =
 {
-    "/ConfidenceServlet"
+    "/ClassServlet"
 })
-public class ConfidenceServlet extends HttpServlet
+public class ClassServlet extends HttpServlet
 {
-    private HttpServletRequest req;
-    private HttpServletResponse resp;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,21 +44,17 @@ public class ConfidenceServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        req = request;
-        resp = response;
-        
         response.setContentType("text/html;charset=UTF-8");
-        
         try (PrintWriter out = response.getWriter())
         {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ConfidenceServlet</title>");            
+            out.println("<title>Servlet StudentNets</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ConfidenceServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet StudentNets at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -78,18 +72,18 @@ public class ConfidenceServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        String id = request.getParameter( "ExerciseId" );
+        String id = request.getParameter( "ClassId" );
         
-        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadReadyClassData( Integer.valueOf( id ) );
+        List<ConfidenceClassStudent> students = new EvaluationDataTransactions().loadReadyStudentData( Integer.valueOf( id ) );
         
         List<Object> data = new ArrayList();
         
         if ( students != null && !students.isEmpty() ) 
         {
-            List<Object[]> confidenceBeliefs = new ClassConfidenceBayesianNet().loadConfidenceBayesNet( students );
-            List<Object[]> effortBeliefs     = new ClassEffortBayesianNet().loadEffortBayesNet( students );
+            List<Object[]> confidenceBeliefs = new StudentConfidenceBayesianNet().loadConfidenceBayesNet( students );
+            List<Object[]> effortBeliefs     = new StudentEffortBayesianNet().loadEffortBayesNet( students );
 
-            for( int i = 0; i < students.size(); i++ )
+            for( int i = 0; i < confidenceBeliefs.size(); i++ )
             {
                 float[] confidence = (float[]) confidenceBeliefs.get( i )[0];
                 float[] effort     = (float[]) effortBeliefs.get( i )[0];
@@ -113,6 +107,7 @@ public class ConfidenceServlet extends HttpServlet
             data.add( new float[]{-1, -1});
         }
         
+        
         Gson gson = new Gson();
         String json = gson.toJson( data );
 
@@ -133,10 +128,7 @@ public class ConfidenceServlet extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        if ( request.getParameter( "param" ).equals( "buildNet" ) )
-        {
-            forward( "index.jsp" );
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -151,18 +143,4 @@ public class ConfidenceServlet extends HttpServlet
     }
 
     
-    private void forward( String page )
-    {
-        try
-        {
-            RequestDispatcher rd = req.getRequestDispatcher( page );
-            rd.forward( req, resp );
-        }
-
-        catch ( Exception e )
-        {
-            System.out.println( "erro ao encaminhar página" );
-        }
-
-    }
 }

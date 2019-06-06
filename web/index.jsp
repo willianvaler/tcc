@@ -118,7 +118,7 @@
                         var e = document.getElementById( "exercises" );
                         var id = e.options[e.selectedIndex].value;
                         
-                        $.get( "ConfidenceServlet", {ExerciseId:id}, function( data )
+                        $.get( "ExerciseServlet", {ExerciseId:id}, function( data )
                         {
 
                             $( '#container' ).empty();

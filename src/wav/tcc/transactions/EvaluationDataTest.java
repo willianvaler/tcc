@@ -14,6 +14,7 @@ public class EvaluationDataTest
     public static void main(String[] args)
     {
 //        new EvaluationDataTransactions().loadClassData(58);
-        new EvaluationDataTransactions().loadStudentData(7);
+//        new EvaluationDataTransactions().loadStudentData(82);
+        new EvaluationDataTransactions().loadClassData(82);
     }
 }
