@@ -42,6 +42,7 @@ public class ConfidenceClassStudent
     private String classeTPphEF;
     private String ativNaoRealizadas;
     private String grauSemelhanca;
+    private String percentualNaoFeito;
     private int dataId;
     private float nivelConfianca;
     private float nivelEsforco;
@@ -492,5 +493,15 @@ public class ConfidenceClassStudent
     public void setNivelEsforco(float nivelEsforco) 
     {
         this.nivelEsforco = nivelEsforco;
+    }
+
+    public String getPercentualNaoFeito() 
+    {
+        return percentualNaoFeito;
+    }
+
+    public void setPercentualNaoFeito(String percentualNaoFeito) 
+    {
+        this.percentualNaoFeito = percentualNaoFeito;
     }
 }

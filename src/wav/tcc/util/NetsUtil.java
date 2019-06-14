@@ -41,18 +41,18 @@ public class NetsUtil
     /**
      * 
      * @param firtsQuartile
-     * @param thirdQaurtile
+     * @param thirdQuartile
      * @param value
      * @return 
      */
-    public static String getQuartileEvaluation( int firtsQuartile, int thirdQaurtile, int value )
+    public static String getQuartileEvaluation( int firtsQuartile, int thirdQuartile, int value )
     {
         if ( value <= firtsQuartile )
         {
             return "BAIXO";
         }
         
-        else if( value > firtsQuartile && value < thirdQaurtile )
+        else if( value > firtsQuartile && value < thirdQuartile )
         {
             return "MEDIO";
         }
@@ -131,6 +131,7 @@ public class NetsUtil
             case "MEDIO":
                 return 2;
             case "DIFICIL":
+                return 3;
             default:
                 return 3;
         }
@@ -162,16 +163,21 @@ public class NetsUtil
      */
     public static int getWeight( String description )
     {
+        if (description == null ) 
+        {
+            return 0;
+        }
+        
         switch ( description )
         {
             case "BAIXO":
-                return 1;
+                return 0;
             case "MEDIO":
                 return 2;
             case "ALTO":
                 return 3;
             default:
-                return 1;
+                return 0;
         }
     }
     
@@ -232,6 +238,43 @@ public class NetsUtil
         else if ( percent > 25 && percent < 50 ){ return "MEDIO_FACIL"; }
         else if ( percent >= 50 && percent < 75 ){ return "MEDIO_DIFICIL"; }
         else { return "DIFCIL"; }
+    }
+    
+    /**
+     * 
+     * @param percent
+     * @return 
+     */
+    public static String getPercecentNotDoneCategory( int percent )
+    {
+        if ( percent == 0 ) { return "NENHUMA"; }
+        else if( percent >= 30 ){ return "MUITAS"; }
+        else{ return "POUCAS"; }
+    }
+    
+    /**
+     * 
+     * @param value
+     * @return 
+     */
+    public static int getPointsRetakes( String value )
+    {
+        if (value == null) 
+        {
+            return 3;
+        }
+        
+        switch( value )
+        {
+            case "NENHUMA":
+                return 3;
+            case "POUCAS":
+                return 2;
+            case "MUITAS":
+                return 1;
+        }
+        
+        return 3;
     }
     
 //    public static String get

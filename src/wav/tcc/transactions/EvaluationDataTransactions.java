@@ -235,7 +235,7 @@ public class EvaluationDataTransactions
     }
     
     /**
-     * carrega os dados brutos para serem inseridos na rede dos exercicios
+     * carrega os dados brutos para serem tratados e inseridos na rede dos exercicios
      * @param classId
      * @return 
      */
@@ -357,12 +357,8 @@ public class EvaluationDataTransactions
     }
     
     /**
-     * treina a rede com os dados carregados do metodo loadStudentData
+     * carrega todos os dados da turma cujo id é passado por parametro
      * 
-     * Para resumir as variáveis de classes para o problema e hipótese relacionadas a confiança (classe_tp_prob_cf, classe_tp_hip_cf) 
-     *      usa-se uma regra que conta o número de vezes que foi acima, se nenhuma vez ocorreu, a classe é NENHUMA, menos de 50%, 
-     *      POUCAS e mais de 50%, MUITAS. O mesmo se aplica ao campo da proporção (classe_prop_ph), para o qual avalia-se de foi
-     *      mais de 50% das vezes desproporcional, se foi menos de 50% ou nenhuma vez desproporcional.
      * @param classId
      * @return 
      */
@@ -384,9 +380,9 @@ public class EvaluationDataTransactions
             
             int percentNotDone = ( 100 * ( countExercises - userData.size() ) ) / countExercises;
             
-            int countDica1 = 0, countDica2 = 0, countPseudo = 0, classe_tp_prob_ef = 0, classe_tp_hip_ef = 0, clase_tp_ph_ef = 0, 
+            int countDica1 = 0, countDica2 = 0, countPseudo = 0, countExecutouCode = 0, classe_tp_prob_ef = 0, classe_tp_hip_ef = 0, clase_tp_ph_ef = 0, 
                     classe_tp_cod_ef = 0, classe_nivel_detalhe_prob = 0, classe_nivel_detalhe_hip = 0, classe_nivel_compreensao = 0,
-                    classe_avaliacao_aluno = 0, classe_tp_prob_cf = 0, classe_tp_hip_cf = 0, classe_prop_ph = 0;
+                    classe_avaliacao_aluno = 0, classe_tp_prob_cf = 0, classe_tp_hip_cf = 0, classe_prop_ph = 0, retomadas = 0;
             
             ConfidenceClassStudent tempStudent = null;
             
@@ -395,58 +391,50 @@ public class EvaluationDataTransactions
                 if ( student.getDica1 ().equals( "S" ) ) { countDica1++; }
                 if ( student.getDica2 ().equals( "S" ) ) { countDica2++; }
                 if ( student.getPseudo().equals( "S" ) ) { countPseudo++; }
-                
+                if ( student.getNumeroExecucoes().equals( "S" ) ) { countExecutouCode++; }
                 if ( student.getClasseTPprobCF().equals( "ACIMA" ) )           { classe_tp_prob_cf++; }
                 if ( student.getClasseTPhipCF ().equals( "ACIMA" ) )           { classe_tp_hip_cf++; }
                 if ( student.getClassePropPH  ().equals( "DESPROPORCIONAL" ) ) { classe_prop_ph++; }
-                
-                //############## effort ##############
                 classe_tp_prob_ef          += NetsUtil.getWeight( student.getClasseTPprobEF()   );
                 classe_tp_hip_ef           += NetsUtil.getWeight( student.getClasseTPhipEF()    );
                 clase_tp_ph_ef             += NetsUtil.getWeight( student.getClasseTPphEF()     );
                 classe_tp_cod_ef           += NetsUtil.getWeight( student.getClasseTPcodEF()    );
-                
-                //############## general data ##############
                 classe_nivel_detalhe_prob  += NetsUtil.getWeight( student.getNivelDetalheProb() );
                 classe_nivel_detalhe_hip   += NetsUtil.getWeight( student.getNivelDetalheHip()  );
                 classe_nivel_compreensao   += NetsUtil.getWeight( student.getNivelCompreensao() );
                 classe_avaliacao_aluno     += NetsUtil.getWeightStudentEvaluation( student.getAvaliacaoAluno() );
-                
+                retomadas                  += NetsUtil.getPointsRetakes( student.getRetomadas() );
                 tempStudent = student;
             }
             
             ConfidenceClassStudent student = new ConfidenceClassStudent();
-            
+
             student.setNome( tempStudent.getNome() );
             student.setSobrenome( tempStudent.getSobrenome() );
-            
             student.setPseudo( NetsUtil.getPseudoAvaliacao( countPseudo, countExercises ) );
             student.setDica1 ( NetsUtil.getDicaAvaliacao( countDica1, countExercises ) );
             student.setDica2 ( NetsUtil.getDicaAvaliacao( countDica2, countExercises ) );
-            
+            student.setNumeroExecucoes( NetsUtil.getDicaAvaliacao( countExecutouCode, countExercises ) );
             student.setClasseTPprobCF( NetsUtil.getDicaAvaliacao( classe_tp_prob_cf, countExercises ) );
             student.setClasseTPhipCF( NetsUtil.getDicaAvaliacao( classe_tp_hip_cf, countExercises ) );
             student.setClassePropPH( NetsUtil.getDicaAvaliacao( classe_prop_ph, countExercises ) );
-            
             student.setClasseTPprobEF( NetsUtil.getPointsCategory( classe_tp_prob_ef, maxPoints ) );
             student.setClasseTPhipEF( NetsUtil.getPointsCategory( classe_tp_hip_ef, maxPoints ) );
             student.setClasseTPphEF( NetsUtil.getPointsCategory( clase_tp_ph_ef, maxPoints ) );
             student.setClasseTPcodEF( NetsUtil.getPointsCategory( classe_tp_cod_ef, maxPoints ) );
-            
             student.setNivelDetalheProb( NetsUtil.getPointsCategory( classe_nivel_detalhe_prob, maxPoints ) );
             student.setNivelDetalheHip( NetsUtil.getPointsCategory( classe_nivel_detalhe_hip, maxPoints ) );
             student.setNivelCompreensao( NetsUtil.getPointsCategory( classe_nivel_compreensao, maxPoints ) );
-            student.setAvaliacaoAluno( NetsUtil.getEvaluationCategory( classe_avaliacao_aluno, maxPoints ) );
+            student.setAvaliacaoAluno( NetsUtil.getPointsCategory( classe_avaliacao_aluno, maxPoints ) );
+            student.setPercentualNaoFeito( NetsUtil.getPercecentNotDoneCategory( percentNotDone ) );
+            student.setRetomadas( NetsUtil.getPointsCategory( retomadas, maxPoints ) );
         }
         
         return students;
     }
     
     /**
-     * Carrega os dados brutos para serem inseridos na rede do estudante
-     * Esses dados são dependentes do treinamento da rede e de suas inserções na tabela dados_modafet_exercicio;
-     * os dados são inseridos nessa tabela e serão carregados todos os dados de exercícios de um único aluno,
-     * para então gerar uma pontuação dada a quantidade de respostas para que então esses dados sejam inseridos na dados_modafet_estudante
+     * carrega os dados brutos para as redes do estudante
      * 
      * @param classId
      * @return 

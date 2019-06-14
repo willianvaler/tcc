@@ -15,6 +15,7 @@ public class EvaluationDataTest
     {
 //        new EvaluationDataTransactions().loadClassData(58);
 //        new EvaluationDataTransactions().loadStudentData(82);
-        new EvaluationDataTransactions().loadClassData(82);
+//        new EvaluationDataTransactions().loadClassData(82);
+        new EvaluationDataTransactions().loadStudentData( 7 );
     }
 }
